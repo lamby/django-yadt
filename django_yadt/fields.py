@@ -134,10 +134,6 @@ class YADTImage(object):
             self.variants[name] = YADTImageFile(name, config, self, instance)
         self.__dict__.update(self.variants)
 
-        # Convenience methods
-        for x in ('url', 'open'):
-            setattr(self, x, getattr(self.original, x))
-
     def __repr__(self):
         return u"<YADTImage: %s.%s.%s (%s)>" % (
             self.field.model._meta.app_label,
