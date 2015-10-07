@@ -6,7 +6,7 @@ setup(
     name='django-yadt',
 
     url="https://chris-lamb.co.uk/projects/django-yadt",
-    version='1',
+    version='2',
     description="Yet Another Django Thumbnailer",
 
     author="Chris Lamb",
