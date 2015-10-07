@@ -1,11 +1,17 @@
-from setuptools import setup
+#!/usr/bin/env python
+
+from setuptools import setup, find_packages
 
 setup(
     name='django-yadt',
-    version=1,
-    packages=(
-        'django_yadt',
-        'django_yadt.management',
-        'django_yadt.management.commands',
-    ),
+
+    url="https://chris-lamb.co.uk/projects/django-yadt",
+    version='1',
+    description="Yet Another Django Thumbnailer",
+
+    author="Chris Lamb",
+    author_email="chris@chris-lamb.co.uk",
+    license="BSD",
+
+    packages=find_packages(),
 )
