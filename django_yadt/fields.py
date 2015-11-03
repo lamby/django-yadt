@@ -1,7 +1,7 @@
 import os
-import Image
 import StringIO
-import ImageDraw
+
+from PIL import Image, ImageDraw
 
 from django.db import models
 from django.utils.crypto import get_random_string
