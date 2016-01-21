@@ -1,9 +1,10 @@
 import os
 import StringIO
 
-from PIL import Image, ImageDraw
+from PIL import Image
 
 from django.db import models
+from django.db.models import fields
 from django.utils.crypto import get_random_string
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -12,8 +13,12 @@ from .utils import from_dotted_path
 
 IMAGE_VARIANTS = []
 
-class YADTImageField(object):
+class YADTImageField(fields.Field):
+    concrete = False
+
     def __init__(self, variants=None, cachebust=False, track_exists=False, fallback=False, format='jpeg', filename_prefix=lambda x: x.pk):
+        super(YADTImageField, self).__init__()
+
         self.variants = {}
         self.cachebust = cachebust
         self.track_exists = track_exists
@@ -47,9 +52,17 @@ class YADTImageField(object):
         )
 
     def contribute_to_class(self, cls, name):
-        self.model = cls
+        # Set up this field...
+        self.attname = name
         self.name = name
+        self.model = cls
+        self.column = None
 
+        setattr(cls, name, Descriptor(self))
+
+        cls._meta.add_field(self, virtual=True)
+
+        # Now set up several other management fields
         self.cachebusting_field = None
         self.exists_field = None
 
@@ -76,9 +89,8 @@ class YADTImageField(object):
 
             cls.add_to_class('%s_exists' % name, self.exists_field)
 
-        cls._meta.add_virtual_field(self)
-
-        setattr(cls, name, Descriptor(self))
+    def db_type(self, connection):
+        return None
 
 class YADTVariantConfig(object):
     def __init__(self, field, name, format, kwargs=None, fallback=None, original=False, pipeline=()):
@@ -243,7 +255,13 @@ class YADTImageFile(object):
 
         im = Image.open(self.image.original.open())
 
-        im = im.convert('RGB')
+        if im.format == 'PNG':
+            original_im = im.copy()
+            original_im = original_im.convert('RGBA')
+            im = Image.new('RGBA', original_im.size, (255, 255, 255, 255))
+            im.paste(original_im, (0, 0), original_im)
+        else:
+            im = im.convert('RGB')
 
         # Apply processing pipeline
         for x in self.config.pipeline:
