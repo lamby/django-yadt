@@ -15,6 +15,6 @@ class Command(BaseCommand):
 
         variant = get_variant(app_label, model_name, field_name, variant_name)
 
-        for x in variant.refresh_all(generator=True):
+        for _ in variant.refresh_all(generator=True):
             sys.stderr.write('.')
         sys.stderr.write('\n')
