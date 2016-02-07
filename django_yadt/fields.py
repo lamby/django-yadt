@@ -233,6 +233,9 @@ class YADTImageFile(object):
     def save(self, content):
         self.delete()
 
+        # Ensure correct content type in S3 (etc.)
+        content.content_type = 'image/%s' % self.config.format
+
         filename = default_storage.save(self.filename, content)
 
         assert filename == self.filename, "Image was not stored at the " \
