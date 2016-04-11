@@ -238,6 +238,8 @@ class YADTImageFile(object):
 
         self.image.cachebust()
 
+        return result
+
     def open(self, mode='rb'):
         return default_storage.open(self._filename())
 
