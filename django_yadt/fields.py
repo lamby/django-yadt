@@ -196,21 +196,12 @@ class YADTImageFile(object):
         self.config = config
         self.instance = instance
 
-        self.filename = os.path.join(
-            self.image.field.upload_to,
-            self.name,
-            '%s.%s' % (
-                self.image.field.filename_prefix(self.instance),
-                self.config.format,
-            ),
-        )
-
     def __repr__(self):
-        return u"<YADTImageFile: %s>" % self.filename
+        return u"<YADTImageFile: %s>" % self._filename()
 
     @property
     def url(self):
-        url = default_storage.url(self.filename)
+        url = default_storage.url(self._filename())
 
         if self.image.field.cachebusting_field:
             suffix = getattr(
@@ -228,7 +219,7 @@ class YADTImageFile(object):
         return url
 
     def exists(self):
-        return default_storage.exists(self.filename)
+        return default_storage.exists(self._filename())
 
     def save(self, content):
         self.delete()
@@ -236,10 +227,11 @@ class YADTImageFile(object):
         # Ensure correct content type in S3 (etc.)
         content.content_type = 'image/%s' % self.config.format
 
-        filename = default_storage.save(self.filename, content)
+        expected = self._filename()
+        result = default_storage.save(expected, content)
 
-        assert filename == self.filename, "Image was not stored at the " \
-            "location we wanted (%r vs %r)" % (filename, self.filename)
+        assert expected == result, "Image was not stored at the " \
+            "location we wanted (%r vs %r)" % (expected, result)
 
         if self.config.original:
             self.image.refresh()
@@ -247,10 +239,10 @@ class YADTImageFile(object):
         self.image.cachebust()
 
     def open(self, mode='rb'):
-        return default_storage.open(self.filename)
+        return default_storage.open(self._filename())
 
     def delete(self):
-        return default_storage.delete(self.filename)
+        return default_storage.delete(self._filename())
 
     def refresh(self):
         if self.config.original:
@@ -276,11 +268,25 @@ class YADTImageFile(object):
         self.save(InMemoryUploadedFile(
             fileobj,
             None,
-            self.filename,
+            self._filename(),
             'application/octet-stream',
             fileobj.len,
             None,
         ))
+
+    def _filename(self):
+        # Calculate the filename dynamically to accomodate the case where
+        # ``self.instance`` was initially assigned when it didn't have a
+        # primary key and was subsequently given one.
+
+        return os.path.join(
+            self.image.field.upload_to,
+            self.name,
+            '%s.%s' % (
+                self.image.field.filename_prefix(self.instance),
+                self.config.format,
+            ),
+        )
 
 ##
 
