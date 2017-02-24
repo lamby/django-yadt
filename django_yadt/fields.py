@@ -7,9 +7,8 @@ from django.db import models
 from django.db.models import fields
 from django.utils.crypto import get_random_string
 from django.core.files.storage import default_storage
+from django.utils.module_loading import import_string
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
-from .utils import from_dotted_path
 
 IMAGE_VARIANTS = []
 
@@ -110,7 +109,7 @@ class YADTVariantConfig(object):
             if '.' not in name:
                 name = 'django_yadt.processors.%s' % x['name']
 
-            x['fn'] = from_dotted_path(name)
+            x['fn'] = import_string(name)
 
         IMAGE_VARIANTS.append(self)
 
