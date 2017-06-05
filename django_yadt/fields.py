@@ -15,8 +15,8 @@ IMAGE_VARIANTS = []
 class YADTImageField(fields.Field):
     concrete = False
 
-    def __init__(self, variants=None, cachebust=False, track_exists=False, fallback=False, format='jpeg', filename_prefix=lambda x: x.pk):
-        super(YADTImageField, self).__init__()
+    def __init__(self, variants=None, cachebust=False, track_exists=False, fallback=False, format='jpeg', filename_prefix=lambda x: x.pk, *args, **kwargs):
+        super(YADTImageField, self).__init__(*args, **kwargs)
 
         self.variants = {}
         self.cachebust = cachebust
