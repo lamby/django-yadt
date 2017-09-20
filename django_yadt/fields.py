@@ -24,7 +24,7 @@ class YADTImageField(fields.Field):
         self.filename_prefix = filename_prefix
 
         variants = variants or {}
-        for name, config in variants.iteritems():
+        for name, config in variants.items():
             if name == 'original':
                 raise ValueError("'original' is a reserved variant name")
 
@@ -141,7 +141,7 @@ class YADTImage(object):
         self.instance = instance
         self.variants = {}
 
-        for name, config in self.field.variants.iteritems():
+        for name, config in self.field.variants.items():
             self.variants[name] = YADTImageFile(name, config, self, instance)
         self.__dict__.update(self.variants)
 
@@ -297,7 +297,7 @@ class YADTClassImage(object):
 
         self.variants = {}
 
-        for name, config in self.field.variants.iteritems():
+        for name, config in self.field.variants.items():
             self.variants[name] = YADTClassVariant(name, config, self)
         self.__dict__.update(self.variants)
 
