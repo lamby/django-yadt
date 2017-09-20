@@ -1,5 +1,5 @@
+import io
 import os
-import StringIO
 
 from PIL import Image
 
@@ -263,7 +263,7 @@ class YADTImageFile(object):
         for x in self.config.pipeline:
             im = x['fn'](im, x)
 
-        fileobj = StringIO.StringIO()
+        fileobj = io.StringIO()
         im.save(fileobj, self.config.format, **self.config.kwargs)
 
         self.save(InMemoryUploadedFile(
