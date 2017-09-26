@@ -1,5 +1,6 @@
 import io
 import os
+import django
 
 from PIL import Image
 
@@ -59,7 +60,10 @@ class YADTImageField(fields.Field):
 
         setattr(cls, name, Descriptor(self))
 
-        cls._meta.add_field(self, virtual=True)
+        if django.VERSION[0] >= 2:
+            cls._meta.add_field(self)
+        else:
+            cls._meta.add_field(self, virtual=True)
 
         # Now set up several other management fields
         self.cachebusting_field = None
