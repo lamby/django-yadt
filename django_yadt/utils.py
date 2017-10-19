@@ -3,6 +3,7 @@ import os
 from django.db import models
 from django.core.management.base import CommandError
 
+
 def get_variant(app_label, model_name, field_name, variant_name):
     model = models.get_model(app_label, model_name)
 
@@ -30,6 +31,7 @@ def get_variant(app_label, model_name, field_name, variant_name):
             field_name,
             variant_name,
         ))
+
 
 def get_variant_from_path(path):
     # Inline to avoid circular import and to imply that it's late anyway

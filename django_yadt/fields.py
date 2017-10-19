@@ -13,6 +13,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 IMAGE_VARIANTS = []
 
+
 class YADTImageField(fields.Field):
     concrete = False
 
@@ -95,6 +96,7 @@ class YADTImageField(fields.Field):
     def db_type(self, connection):
         return None
 
+
 class YADTVariantConfig(object):
     def __init__(self, field, name, format, kwargs=None, fallback=None, original=False, pipeline=()):
         self.field = field
@@ -127,6 +129,7 @@ class YADTVariantConfig(object):
             '%s.%s' % (self.name, self.format),
         )
 
+
 class Descriptor(object):
     def __init__(self, field):
         self.field = field
@@ -137,7 +140,6 @@ class Descriptor(object):
 
         return YADTImage(self.field, instance)
 
-##
 
 class YADTImage(object):
     def __init__(self, field, instance):
@@ -191,6 +193,7 @@ class YADTImage(object):
             variant.delete()
         self.cachebust()
         self.mark_exists(False)
+
 
 class YADTImageFile(object):
     def __init__(self, name, config, image, instance):
@@ -293,7 +296,6 @@ class YADTImageFile(object):
             ),
         )
 
-##
 
 class YADTClassImage(object):
     def __init__(self, field):
@@ -312,6 +314,7 @@ class YADTClassImage(object):
             self.field.name,
             self.field.upload_to,
         )
+
 
 class YADTClassVariant(object):
     def __init__(self, name, config, image):

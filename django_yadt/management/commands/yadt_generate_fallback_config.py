@@ -11,6 +11,7 @@ location ~ ^%(source_prefix)s%(source)s/ {
 }
 """
 
+
 class Command(NoArgsCommand):
     option_list = NoArgsCommand.option_list + (
         optparse.make_option(

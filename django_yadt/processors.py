@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw
 
+
 def crop(im, config):
     """
     Resize and crop to the specified dimensions, regardless of source size.
@@ -33,6 +34,7 @@ def crop(im, config):
         Image.ANTIALIAS,
     )
 
+
 def thumbnail(im, config):
     """
     Create a thumbnail "no larger than the given size", ie. without upsizing.
@@ -44,6 +46,7 @@ def thumbnail(im, config):
     )
 
     return im
+
 
 def circle(im, config):
     """
