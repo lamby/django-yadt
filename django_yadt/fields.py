@@ -267,7 +267,7 @@ class YADTImageFile(object):
         for x in self.config.pipeline:
             im = x['fn'](im, x)
 
-        fileobj = io.StringIO()
+        fileobj = io.BytesIO()
         im.save(fileobj, self.config.format, **self.config.kwargs)
 
         self.save(InMemoryUploadedFile(
@@ -275,7 +275,7 @@ class YADTImageFile(object):
             None,
             self._filename(),
             'application/octet-stream',
-            fileobj.len,
+            fileobj.getbuffer().nbytes,
             None,
         ))
 
