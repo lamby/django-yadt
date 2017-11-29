@@ -209,6 +209,11 @@ class YADTImageFile(object):
     def url(self):
         url = default_storage.url(self._filename())
 
+        # Never mess with new-style S3 "v4" URLs; modifying the querystring
+        # breaks all authentication.
+        if 'X-Amz-Algorithm=' in url:
+            return url
+
         if self.image.field.cachebusting_field:
             suffix = getattr(
                 self.instance,
